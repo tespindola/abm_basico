@@ -21,6 +21,7 @@ Route::prefix('s')->group(function () {
     Route::get('posts', [PostsController::class, 'index']);
     Route::post('posts', [PostsController::class, 'store']);
     Route::post('posts/{id}', [PostsController::class, 'update']);
+    Route::post('posts/delete/{id}', [PostsController::class, 'delete']);
 });
 
 // Las rutas publicas que accede el cliente se van a manejar mediante vue, ya que gracias a esto evitamos que la pagina web haga un reload completo cada vez que quiera acceder a un nuevo lugar.

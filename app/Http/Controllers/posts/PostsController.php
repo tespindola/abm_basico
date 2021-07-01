@@ -19,10 +19,8 @@ class PostsController extends Controller{
         $posts = PostsModel::paginate(20);
 
         return response()->json([
-            'data' => $posts->items(),
+            'posts' => $posts->items(),
             'current_page' => $posts->currentPage(),
-            'page_count' => $posts->lastPage(),
-            'has_next_page' => $posts->hasMorePages(),
             'total' => $posts->total(),
             'per_page' => $posts->perPage(),
         ]);
@@ -54,7 +52,7 @@ class PostsController extends Controller{
         }
 
         // Retornamos el post que se creo
-        return response()->json($post);
+        return response()->json(['post' => $post]);
     }
 
     public function update(Request $request, $id){
@@ -70,13 +68,27 @@ class PostsController extends Controller{
             // Buscamos el id que nos pasan y actualizamos la info de dicho post
             $post_edit = PostsModel::findOrFail($id);
             $post_edit->fill($data);
+            $post_edit->save();
         } catch (Exception $err) {
             // En caso de error abortamos y devolvemos el error
             abort(response($err, 500));
         }
 
         // Retornamos el post editado
-        return response()->json($post_edit);
+        return response()->json(['post' => $post_edit]);
+    }
+
+    public function delete($id){
+        try {
+            // Buscamos el post y lo eliminamos
+            PostsModel::findOrFail($id)->delete();
+        } catch (\Throwable $th) {
+            // En caso de error abortamos y devolvemos el error
+            abort(response($err, 500));
+        }
+
+        // Retornamos el post editado
+        return response()->json(['delete' => true]);
     }
 
 }
